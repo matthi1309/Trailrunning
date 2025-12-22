@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trailrunning-Entscheidung 🎄</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(180deg, #eef2f3, #e5e7eb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: white;
+      max-width: 420px;
+      width: 100%;
+      padding: 1.5rem;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.45rem 0;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background: #1e40af;
+      color: white;
+    }
+    button.secondary {
+      background: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1 id="question"></h1>
+    <div id="answers"></div>
+  </div>
+
+<script>
+const tree = {
+  start: {
+    question: "🎄 Welchen Trail soll ich für dich buchen?\nWelche Distanz reizt dich?",
+    answers: [
+      { text: "Kurz (≤ 15 km)", next: "kurz" },
+      { text: "Mittel (16–30 km)", next: "mittel" },
+      { text: "Lang (31–55 km)", next: "lang" },
+      { text: "Ultra (> 55 km)", next: "ultra" }
+    ]
+  },
+
+  /* KURZ */
+  kurz: {
+    question: "Wo möchtest du laufen?",
+    answers: [
+      { text: "Innsbruck", next: "innsbruck_kurz" },
+      { text: "Leutasch", next: "leutasch" },
+      { text: "Hochfügen", next: "hochfuegen" },
+      { text: "Söll", next: "soell_kurz" }
+    ]
+  },
+
+  /* MITTEL */
+  mittel: {
+    question: "Wo möchtest du laufen?",
+    answers: [
+      { text: "Ebbs (Koasamarsch)", next: "ebbs" },
+      { text: "Scheffau (Kaiserkrone)", next: "scheffau" },
+      { text: "Mayrhofen", next: "steinbock" },
+      { text: "Söll", next: "soell_mittel" }
+    ]
+  },
+
+  /* LANG */
+  lang: {
+    question: "Wo möchtest du laufen?",
+    answers: [
+      { text: "Imst (Tschirgant)", next: "tschirgant" },
+      { text: "Scharnitz (Karwendel)", next: "karwendel" },
+      { text: "Scheffau (Kaiserkrone)", next: "scheffau" }
+    ]
+  },
+
+  /* ULTRA */
+  ultra: {
+    question: "Wo möchtest du laufen?",
+    answers: [
+      { text: "Innsbruck", next: "innsbruck_ultra" },
+      { text: "Fieberbrunn (KAT100)", next: "kat100" }
+    ]
+  },
+
+  /* EVENTS */
+  innsbruck_kurz: {
+    question: "Hast du am 13. Juni 2026 Zeit?\n→ Innsbruck Alpine Trailrun Festival",
+    answers: [
+      { text: "Ja 🎉", next: "end_innsbruck" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  innsbruck_ultra: {
+    question: "Hast du am 13. Juni 2026 Zeit?\n→ Innsbruck Alpine Trailrun Festival (Ultra)",
+    answers: [
+      { text: "Ja 🎉", next: "end_innsbruck" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  ebbs: {
+    question: "Hast du am 13. Juni 2026 Zeit?\n→ Ebbser Koasamarsch Trailruns",
+    answers: [
+      { text: "Ja 🎉", next: "end_ebbs" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  tschirgant: {
+    question: "Hast du am 27. Juni 2026 Zeit?\n→ Tschirgant Sky Run",
+    answers: [
+      { text: "Ja 🎉", next: "end_tschirgant" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  scheffau: {
+    question: "Hast du am 1. August 2026 Zeit?\n→ Kaiserkrone Trail",
+    answers: [
+      { text: "Ja 🎉", next: "end_scheffau" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  leutasch: {
+    question: "Hast du vom 6.–8. August 2026 Zeit?\n→ Ganghofertrail Leutasch",
+    answers: [
+      { text: "Ja 🎉", next: "end_leutasch" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  kat100: {
+    question: "Hast du am 9. August 2026 Zeit?\n→ KAT100 by UTMB",
+    answers: [
+      { text: "Ja 🎉", next: "end_kat" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  hochfuegen: {
+    question: "Hast du am 22. August 2026 Zeit?\n→ Hochfügen Hightrails Festival",
+    answers: [
+      { text: "Ja 🎉", next: "end_hochfuegen" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  steinbock: {
+    question: "Hast du am 29. August 2026 Zeit?\n→ Zillertaler Steinbocklauf",
+    answers: [
+      { text: "Ja 🎉", next: "end_steinbock" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  karwendel: {
+    question: "Hast du am 2.–3. Oktober 2026 Zeit?\n→ Karwendelmarsch",
+    answers: [
+      { text: "Ja 🎉", next: "end_karwendel" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  soell_kurz: {
+    question: "Hast du im Oktober 2026 Zeit?\n→ Tour de Tirol",
+    answers: [
+      { text: "Ja 🎉", next: "end_soell" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  soell_mittel: {
+    question: "Hast du im Oktober 2026 Zeit?\n→ Tour de Tirol",
+    answers: [
+      { text: "Ja 🎉", next: "end_soell" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+
+  /* ENDE */
+  end_innsbruck: { question: "🎁 Perfekt!\nIch melde dich für das Innsbruck Alpine Trailrun Festival an.", answers: [{ text: "Nochmal entscheiden", next: "start" }] },
+  end_ebbs: { question: "🎁 Perfekt!\nIch melde dich für den Ebbser Koasamarsch an.", answers: [{ text: "Nochmal entscheiden", next: "start" }] },
+  end_tschirgant: { question: "🎁 Perfekt!\nIch melde dich für den Tschirgant Sky Run an.", answers: [{ text: "Nochmal entscheiden", next: "start" }] },
+  end_scheffau: { question: "🎁 Perfekt!\nIch melde dich für den Kaiserkrone Trail an.", answers: [{ text: "Nochmal entscheiden", next: "start" }] },
+  end_leutasch: { question: "🎁 Perfekt!\nIch melde dich für den Ganghofertrail Leutasch an.", answers: [{ text: "Nochmal entscheiden", next: "start" }] },
+  end_kat: { question: "🎁 Perfekt!\nIch melde dich für den KAT100 an.", answers: [{ text: "Nochmal entscheiden", next: "start" }] },
+  end_hochfuegen: { question: "🎁 Perfekt!\nIch melde dich für das Hochfügen Hightrails Festival an.", answers: [{ text: "Nochmal entscheiden", next: "start" }] },
+  end_steinbock: { question: "🎁 Perfekt!\nIch melde dich für den Zillertaler Steinbocklauf an.", answers: [{ text: "Nochmal entscheiden", next: "start" }] },
+  end_karwendel: { question: "🎁 Perfekt!\nIch melde dich für den Karwendelmarsch an.", answers: [{ text: "Nochmal entscheiden", next: "start" }] },
+  end_soell: { question: "🎁 Perfekt!\nIch melde dich für die Tour de Tirol an.", answers: [{ text: "Nochmal entscheiden", next: "start" }] }
+};
+
+const q = document.getElementById("question");
+const a = document.getElementById("answers");
+
+function showNode(key) {
+  const node = tree[key];
+  q.textContent = node.question;
+  a.innerHTML = "";
+  node.answers.forEach(ans => {
+    const btn = document.createElement("button");
+    btn.textContent = ans.text;
+    btn.onclick = () => showNode(ans.next);
+    a.appendChild(btn);
+  });
+}
+
+showNode("start");
+</script>
+</body>
+</html>
