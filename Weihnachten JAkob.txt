@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Trail-Event Entscheidungsbaum</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: #eef2f3;
+    }
+    .card {
+      background: white;
+      width: 90%;
+      max-width: 420px;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    button {
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.75rem;
+      border: none;
+      background: #1e40af;
+      color: white;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h1 id="question"></h1>
+  <div id="answers"></div>
+</div>
+
+<script>
+const tree = {
+  start: {
+    question: "Welche Distanz möchtest du laufen?",
+    answers: [
+      { text: "Kurz (≤ 15 km)", next: "kurz" },
+      { text: "Mittel (~15–30 km)", next: "mittel" },
+      { text: "Lang (> 30 km)", next: "lang" }
+    ]
+  },
+  kurz: {
+    question: "Wo möchtest du laufen?",
+    answers: [
+      { text: "Innsbruck (Festival)", next: "innsbruck_kurz" },
+      { text: "Tannheimer Tal", next: "tannheimer" },
+      { text: "Itter (Salventrail)", next: "salventrail" }
+    ]
+  },
+  mittel: {
+    question: "Wo möchtest du laufen?",
+    answers: [
+      { text: "Ötztal (Stuiben Trail)", next: "stuiben" },
+      { text: "Stubaital", next: "stubai" },
+      { text: "Itter (Salventrail)", next: "salventrail" }
+    ]
+  },
+  lang: {
+    question: "Wo möchtest du laufen?",
+    answers: [
+      { text: "Innsbruck (Marathon/Ultra)", next: "innsbruck_long" },
+      { text: "Stubaital Ultra", next: "stubai" },
+      { text: "Ötztal Großdistanz", next: "gletscher" }
+    ]
+  },
+  innsbruck_kurz: {
+    question: "Hast du Zeit um den 30. Apr – 2. Mai 2026?",
+    answers: [
+      { text: "Ja → Innsbruck Alpine Trailrun Festival", next: "end" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  tannheimer: {
+    question: "Hast du Zeit am 30. Mai 2026?",
+    answers: [
+      { text: "Ja → 6 Huts Trail", next: "end" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  salventrail: {
+    question: "Hast du Zeit am 24. Mai 2026?",
+    answers: [
+      { text: "Ja → Salventrail Itter", next: "end" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  stuiben: {
+    question: "Hast du Zeit am 14.–17. Mai 2026?",
+    answers: [
+      { text: "Ja → Stuiben Trailrun", next: "end" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  stubai: {
+    question: "Hast du Zeit am 3.–4. Juli 2026?",
+    answers: [
+      { text: "Ja → Stubai Ultratrail", next: "end" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  innsbruck_long: {
+    question: "Hast du Zeit Ende April/Anfang Mai?",
+    answers: [
+      { text: "Ja → Innsbruck Alpine Trailrun Festival (lange Distanzen)", next: "end" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  gletscher: {
+    question: "Hast du Zeit am 16.–18. Juli 2026?",
+    answers: [
+      { text: "Ja → Gletscher Trailrun", next: "end" },
+      { text: "Nein", next: "start" }
+    ]
+  },
+  end: {
+    question: "Super! Du hast eine Entscheidung getroffen 🎉",
+    answers: [
+      { text: "Nochmal von vorne", next: "start" }
+    ]
+  }
+};
+
+const qEl = document.getElementById("question");
+const aEl = document.getElementById("answers");
+
+function showNode(key) {
+  const node = tree[key];
+  qEl.textContent = node.question;
+  aEl.innerHTML = "";
+  node.answers.forEach(a => {
+    const btn = document.createElement("button");
+    btn.textContent = a.text;
+    btn.onclick = () => showNode(a.next);
+    aEl.appendChild(btn);
+  });
+}
+
+showNode("start");
+</script>
+
+</body>
+</html>
